@@ -15,18 +15,18 @@ Piwigo
 └── compose.yaml
 ```
 
-Edit `.env` and add a password after `db_user_password=` (you can generate a strong password [**here**](https://bitwarden.com/password-generator/)), you change the exposed port if you need to.
+Edit the `.env` and add a password after `db_user_password=` (you can generate a strong password [**here**](https://bitwarden.com/password-generator/)). Change the exposed port if you need to.
 
 ```conf
 db_user_password=
 piwigo_port=8080
 ```
 
-You can start the container with `docker compose up -d`
+Start the container with `docker compose up -d`
 
 ### Configuring your reverse proxy
 
-Setup your reverse proxy to have a domain/subdomain or subpath point to the container, the following exemple are for nginx :
+Setup your reverse proxy to have a domain/subdomain or subpath point to the container. The following examples are for nginx :
 
 ```conf
 server {
@@ -42,7 +42,7 @@ server {
 }
 ```
 
-If you intend on hosting piwigo on a subpath (ex: `my_domain.tld/gallery`) add `proxy_set_header X-Forwarded-Prefix /my_subpath` at the end of the location block;
+If you intend to host piwigo on a subpath (ex: `my_domain.tld/gallery`) add `proxy_set_header X-Forwarded-Prefix /my_subpath` at the end of the location section;
 
 ```conf
 	listen 80;
@@ -68,11 +68,11 @@ Database configuration:
     Database name:  piwigodb
 ```
 
-Create and admin account and your piwigo is installed !
+Create an admin account and your piwigo is installed !
 
 ### Making backups
 
-Go to the folder where your `compose.yaml` is , stop the container using `docker compose down` and use rsync to backup `./piwigo-data/`
+Go to the folder where your `compose.yaml` is, stop the container using `docker compose down` and use rsync to backup `./piwigo-data/`
 
 ```sh
 # --delete-before will remove your older backup !
@@ -83,24 +83,24 @@ rsync -r --delete-before ./piwigo-data/ ./piwigo-data.bck/
 
 **Making a backup is always advised before updating**  
 
-Go to the folder where your `compose.yaml` is and stop the container, then pull the new version of the container with `docker compose pull` and restart it with `docker compose up -d`
+Go to the folder where your `compose.yaml` is and stop the container. Then pull the new version of the container with `docker compose pull` and restart it with `docker compose up -d`
 
-Updating piwigo via the web interface do no replace container updates !
+Updating piwigo via the web interface does not replace container updates !
 
 ## Advanced options
 
-if you preffer using a `mysql` container instead of `mariadb` edit `compose.yaml` and replace mariadb by mysql (case sensitive).
+If you prefer using a `mysql` container instead of `mariadb` edit `compose.yaml` and replace mariadb by mysql (be aware it is case sensitive).
 
-if you want to use an existing MySQL/MariaDB database you already setup, use `compose-nodb.yaml` and rename it `compose.yaml`.
+If you want to use an existing MySQL/MariaDB database you already setup, use `compose-nodb.yaml` and rename it `compose.yaml`.
 You can either create `.env` with `piwigo_port=` or manually edit the compose file to change the exposed port.
 
-You can create a script at `./piwigo-data/scripts/user.sh` to run commands before nginx and php start.  
-eg: to install extra dependencies like pandoc `apk add --no-cache pandoc`, available package listed at [alpine pkg index](https://pkgs.alpinelinux.org/packages).  
+Create a script at `./piwigo-data/scripts/user.sh` to run commands before nginx and php start.  
+eg: to install extra dependencies like pandoc `apk add --no-cache pandoc`, available packages are listed at [alpine pkg index](https://pkgs.alpinelinux.org/packages).  
 **Note that the script is run as root**.
 
 ## Container Architeture
 
-Two container :
+Two containers :
 - Alpine nginx with php-fpm
 - MariaDB
 
