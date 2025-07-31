@@ -60,7 +60,7 @@ If you intend to host piwigo on a subpath (ex: `my_domain.tld/gallery`) add `pro
 ### Installing piwigo 
 
 Fill out the database form using the following values :
-```yaml
+```
 Database configuration:
 	Host:			piwigo-db:3306
 	User:			piwigodb_user
