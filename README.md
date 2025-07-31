@@ -31,13 +31,13 @@ Setup your reverse proxy to have a domain/subdomain or subpath point to the cont
 ```conf
 server {
 	listen 80;
-    server_name my_domain.tld;
+	server_name my_domain.tld;
 	location / {
-	    proxy_pass http://127.0.0.1:8080/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_pass http://127.0.0.1:8080/;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
 	}
 }
 ```
@@ -46,14 +46,14 @@ If you intend to host piwigo on a subpath (ex: `my_domain.tld/gallery`) add `pro
 
 ```conf
 	listen 80;
-    server_name my_domain.tld;
+	server_name my_domain.tld;
 	location /gallery/ {
-        proxy_pass http://127.0.0.1:8080/;
-        proxy_set_header Host $host;
-    	proxy_set_header X-Real-IP $remote_addr;
-    	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-Prefix /gallery;
+		proxy_pass http://127.0.0.1:8080/;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header X-Forwarded-Prefix /gallery;
     }
 ```
 
@@ -62,10 +62,10 @@ If you intend to host piwigo on a subpath (ex: `my_domain.tld/gallery`) add `pro
 Fill out the database form using the following values :
 ```yaml
 Database configuration:
-    Host:           piwigo-db:3306
-    User:           piwigodb_user
-    Password:       #Password in .env
-    Database name:  piwigodb
+	Host:			piwigo-db:3306
+	User:			piwigodb_user
+	Password:		#Password in .env
+	Database name:	piwigodb
 ```
 
 Create an admin account and your piwigo is installed !
