@@ -65,7 +65,7 @@ Database configuration:
 	Host:			piwigo-db:3306
 	User:			piwigodb_user
 	Password:		#Password in .env
-	Database name:	piwigodb
+	Database name:		piwigodb
 ```
 
 Create an admin account and your piwigo is installed !
