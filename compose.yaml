@@ -3,12 +3,12 @@ networks:
     external: false
 
 services:
-  piwigo-backend:
+  piwigo:
     image: docker.io/rushlana/piwigo-test:latest
     networks:
       - piwigo-network
     ports:
-      - '${piwigo_port}:80'
+      - ${piwigo_port}:80
     depends_on:
       - piwigo-db
     volumes:
@@ -19,10 +19,10 @@ services:
     restart: always
     environment:
       - MARIADB_RANDOM_ROOT_PASSWORD=true
-      # Defined in .env
       - MARIADB_USER=piwigodb_user
-      - MARIADB_PASSWORD=${db_user_password}
       - MARIADB_DATABASE=piwigodb
+      # Defined in .env
+      - MARIADB_PASSWORD=${db_user_password} 
     networks:
       - piwigo-network
     volumes:
