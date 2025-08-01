@@ -1,7 +1,7 @@
 FROM docker.io/nginx:stable-alpine
 # Set Piwigo and PHP Version
 ARG PHP_VERSION="83"
-ARG PIWIGO_VERSION="15.5.0" 
+ARG PIWIGO_VERSION="15.6.0"
 
 RUN apk add --update --no-cache \
 	# PHP dependencies
