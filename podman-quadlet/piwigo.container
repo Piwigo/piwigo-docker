@@ -1,0 +1,14 @@
+# piwigo.container
+[Unit]
+Requires=piwigo-db.service
+After=piwigo-db.service
+
+[Container]
+Image=docker.io/rushlana/piwigo-test:latest
+Network=piwigo.network
+PublishPort=8080:80
+Volume=./piwigo-data/piwigo:/var/www/html/piwigo:z
+Volume=./piwigo-data/scripts:/usr/local/bin/scripts:z
+
+[Install]
+WantedBy=multi-user.target
