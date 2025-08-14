@@ -65,7 +65,7 @@ sudo systemctl start piwigo.service
 
 ### Diagnosing errors 
 
-Access the systemd journal `journalctl --user -eu piwigo.service`, most common errors are permision issues.  
+Access the systemd journal `sudo journalctl -eu piwigo.service`, most common errors are permision issues.  
 Ensure that your volume is in a valid location and has read and write permisions.
 
 ### Documentation 
