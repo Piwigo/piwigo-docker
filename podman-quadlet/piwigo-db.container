@@ -1,4 +1,4 @@
-# piwigo-db.container
+# Piwigo database container
 [Container]
 Environment=MARIADB_RANDOM_ROOT_PASSWORD=true MARIADB_USER=piwigodb_user MARIADB_DATABASE=piwigodb MARIADB_PASSWORD=PASSWORD
 Image=docker.io/library/mariadb:lts

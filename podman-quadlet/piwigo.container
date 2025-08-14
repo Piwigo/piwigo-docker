@@ -1,10 +1,10 @@
-# piwigo.container
+# Piwigo NGINX PHP-FPM container
 [Unit]
 Requires=piwigo-db.service
 After=piwigo-db.service
 
 [Container]
-Image=docker.io/rushlana/piwigo-test:latest
+Image=ghcr.io/piwigo/piwigo:latest
 Network=piwigo.network
 PublishPort=8080:80
 Volume=./piwigo-data/piwigo:/var/www/html/piwigo:z
