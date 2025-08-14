@@ -34,8 +34,8 @@ Edit `piwigo.container` :
 
 ### Changing bind-mounts
 
-Bind mounts are links between the host filesystem and the containers.
-System placeholder are valid in quadlets, `%h` is match the container user home (`/root/`)
+Bind mounts are links between the host filesystem and the containers.  
+Systemd placeholder are valid in quadlets, `%h` is match the container user home (`/root/`) see [the documentation](#documentation)
 
 Edit `piwigo.container` :
 
@@ -65,10 +65,10 @@ sudo systemctl start piwigo.service
 
 ### Diagnosing errors 
 
-Access the systemd journal `journalctl --user -eu piwigo.service`, most common errors are permision issues.
+Access the systemd journal `journalctl --user -eu piwigo.service`, most common errors are permision issues.  
 Ensure that your volume is in a valid location and has read and write permisions.
 
-### Podman documenation
+### Documentation 
 
 - [Quadlet unit documentation](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)
 - [Volume documentation](https://docs.podman.io/en/v4.4/markdown/options/volume.html)
