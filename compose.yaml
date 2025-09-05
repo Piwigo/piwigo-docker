@@ -4,8 +4,7 @@ networks:
 
 services:
   piwigo-main:
-    # image: ghcr.io/piwigo/piwigo:latest
-    build: .
+    image: ghcr.io/piwigo/piwigo:latest
     networks:
       - piwigo-network
     ports:
