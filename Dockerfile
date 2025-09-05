@@ -1,7 +1,7 @@
 FROM docker.io/alpine:latest
 
 # Set Piwigo and PHP Version
-ARG PHP_VERSION="83"
+ARG PHP_VERSION="84"
 ARG PIWIGO_VERSION="15.6.0"
 
 # Install dependencies
@@ -34,6 +34,7 @@ RUN sed -i "s|;listen.owner\s*=\s*nobody|listen.owner = nginx|g" /etc/php${PHP_V
 	&& sed -i "s|user\s*=\s*nobody|user = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf \
 	&& sed -i "s|group\s*=\s*nobody|group = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf
 COPY ./config/php.ini /etc/php${PHP_VERSION}/conf.d/piwigo.ini
+ENV PHP_VERSION=${PHP_VERSION}
 COPY ./config/nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /var/www/html/piwigo /var/www/source/
 RUN chown nginx:nginx /var/www/html/ /var/www/source/
