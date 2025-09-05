@@ -27,10 +27,17 @@ RUN apk add --update --no-cache \
 	imagemagick imagemagick-heic imagemagick-jpeg imagemagick-jxl imagemagick-pango \
 	imagemagick-pdf imagemagick-raw imagemagick-svg imagemagick-tiff imagemagick-webp
 
-ARG S6_OVERLAY_VERSION=" v3.2.0.3"
+ARG S6_OVERLAY_VERSION="3.2.0.3"
 
-RUN curl -fsSL -o /tmp/s6-overlay-arch.tar.xz \
-      "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz"; \
+ARG TARGETARCH
+RUN set -eux; \
+    case "$TARGETARCH" in \
+      amd64)   S6ARCH="x86_64" ;; \
+      arm64)   S6ARCH="aarch64" ;; \
+      *) echo "x86_64" ;; \
+    esac; \
+	curl -fsSL -o /tmp/s6-overlay-arch.tar.xz \
+      "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6ARCH}.tar.xz"; \
     tar -C / -Jxpf /tmp/s6-overlay-arch.tar.xz; \
     rm -f /tmp/s6-overlay-*.tar.xz
 
