@@ -3,7 +3,7 @@ networks:
     external: false
 
 services:
-  piwigo:
+  piwigo-main:
     # image: ghcr.io/piwigo/piwigo:latest
     build: .
     networks:
