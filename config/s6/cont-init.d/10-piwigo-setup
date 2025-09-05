@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/command/with-contenv sh
 
 # Ensure directories are writable (see https://github.com/MariaDB/mariadb-docker/blob/master/docker-entrypoint.sh)
 find "/var/www/html/piwigo/" \! -user nginx \( -exec chown nginx: '{}' + -o -true \)
@@ -21,7 +21,3 @@ if [ -e "/usr/local/bin/scripts/user.sh" ]; then
 else
     echo "No user script found; you can optionally add one in ./piwigo-data/scripts/user.sh"
 fi
-
-# Log that the script has finished
-echo "Starting supervisord"
-/usr/bin/supervisord -c /etc/supervisord.conf

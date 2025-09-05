@@ -1,12 +1,13 @@
 FROM docker.io/alpine:latest
 
 # Set Piwigo and PHP Version
-ARG PHP_VERSION="83"
+ARG PHP_VERSION="84"
 ARG PIWIGO_VERSION="15.6.0"
 
+# Install dependencies
 RUN apk add --update --no-cache \
-	# Nginx and PHP fpm
-	nginx php${PHP_VERSION} php${PHP_VERSION}-fpm \
+	# s6-overlay Nginx and PHP fpm
+	s6-overlay nginx php${PHP_VERSION} php${PHP_VERSION}-fpm \
 	# PHP dependencies
 	php${PHP_VERSION}-bcmath php${PHP_VERSION}-calendar php${PHP_VERSION}-ctype \
 	php${PHP_VERSION}-curl php${PHP_VERSION}-dom php${PHP_VERSION}-exif \
@@ -25,34 +26,29 @@ RUN apk add --update --no-cache \
 	curl exiftool ffmpeg mediainfo ghostscript findutils \
 	# Imagemagick
 	imagemagick imagemagick-heic imagemagick-jpeg imagemagick-jxl imagemagick-pango \
-	imagemagick-pdf imagemagick-raw imagemagick-svg imagemagick-tiff imagemagick-webp \
-	# Supervisor to run PHP-FPM and NGINX
-	supervisor
+	imagemagick-pdf imagemagick-raw imagemagick-svg imagemagick-tiff imagemagick-webp
 
-# Configure PHP-FPM (set user to nginx)
+# Configure PHP-FPM and NGINX
 RUN sed -i "s|;listen.owner\s*=\s*nobody|listen.owner = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf \
-&& sed -i "s|;listen.group\s*=\s*nobody|listen.group = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf \
-&& sed -i "s|user\s*=\s*nobody|user = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf \
-&& sed -i "s|group\s*=\s*nobody|group = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf
-
-# Configure and set the php version of supervisor
-COPY ./config/supervisord.conf /etc/supervisord.conf
-RUN sed -i "s/PHP-VERSION/${PHP_VERSION}/" /etc/supervisord.conf
-
-# Configure NGINX, fetch and extract piwigo
+	&& sed -i "s|;listen.group\s*=\s*nobody|listen.group = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf \
+	&& sed -i "s|user\s*=\s*nobody|user = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf \
+	&& sed -i "s|group\s*=\s*nobody|group = nginx|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf
+COPY ./config/php.ini /etc/php${PHP_VERSION}/conf.d/piwigo.ini
+ENV PHP_VERSION=${PHP_VERSION}
 COPY ./config/nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /var/www/html/piwigo /var/www/source/
 RUN chown nginx:nginx /var/www/html/ /var/www/source/
+EXPOSE 80 
+
+# Fetch, extract and install Piwigo
 USER nginx
 RUN curl -o /tmp/piwigo.zip https://piwigo.org/download/dlcounter.php?code=${PIWIGO_VERSION}
 RUN unzip /tmp/piwigo.zip -d /var/www/source/
 RUN rm -rf /tmp/piwigo.zip
 
-# Bind port 80
-EXPOSE 80
-
-# Copy script and start supervisord
+# Configure s6-overlay
 USER root
-COPY --chmod=0755 "./config/entrypoint.sh" "/usr/local/bin/entrypoint.sh"
-ENTRYPOINT ["/bin/ash","-c"]
-CMD ["/usr/local/bin/entrypoint.sh"]
+COPY --chmod=0755 ./config/s6/services/php-fpm/run /etc/services.d/php-fpm/run
+COPY --chmod=0755 ./config/s6/services/nginx/run /etc/services.d/nginx/run
+COPY --chmod=0755 ./config/s6/cont-init.d/10-piwigo-setup /etc/cont-init.d/10-piwigo-setup
+ENTRYPOINT ["/init"]
