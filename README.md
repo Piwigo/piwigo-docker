@@ -15,11 +15,12 @@ Piwigo
 └── compose.yaml
 ```
 
-Edit the `.env` and add a password after `db_user_password=` (you can generate a strong password [**here**](https://bitwarden.com/password-generator/)). Change the exposed port if you need to.
+Edit the `.env` and add a password after `db_user_password=` (you can generate a strong password [**here**](https://bitwarden.com/password-generator/)). Change the exposed port if you need to. And you can also set a timezone.
 
 ```conf
 db_user_password=
 piwigo_port=8080
+timezone=Europe/Paris
 ```
 
 Start the container with `docker compose up -d`
