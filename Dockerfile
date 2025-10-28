@@ -23,7 +23,7 @@ RUN apk add --update --no-cache \
 	php${PHP_VERSION}-xml php${PHP_VERSION}-xmlreader php${PHP_VERSION}-xmlwriter \
 	php${PHP_VERSION}-xsl php${PHP_VERSION}-zip \
 	# External dependencies
-	curl exiftool ffmpeg mediainfo ghostscript findutils \
+	curl exiftool ffmpeg mediainfo ghostscript findutils tzdata \
 	# Imagemagick
 	imagemagick imagemagick-heic imagemagick-jpeg imagemagick-jxl imagemagick-pango \
 	imagemagick-pdf imagemagick-raw imagemagick-svg imagemagick-tiff imagemagick-webp
@@ -50,5 +50,6 @@ RUN rm -rf /tmp/piwigo.zip
 USER root
 COPY --chmod=0755 ./config/s6/services/php-fpm/run /etc/services.d/php-fpm/run
 COPY --chmod=0755 ./config/s6/services/nginx/run /etc/services.d/nginx/run
+COPY --chmod=0755 ./config/s6/cont-init.d/00-timezone /etc/cont-init.d/00-timezone
 COPY --chmod=0755 ./config/s6/cont-init.d/10-piwigo-setup /etc/cont-init.d/10-piwigo-setup
 ENTRYPOINT ["/init"]

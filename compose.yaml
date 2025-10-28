@@ -5,6 +5,9 @@ networks:
 services:
   piwigo-main:
     image: ghcr.io/piwigo/piwigo:latest
+    restart: always
+    environment:
+      - TZ=${timezone}
     networks:
       - piwigo-network
     ports:
@@ -23,6 +26,7 @@ services:
       - MARIADB_DATABASE=piwigodb
       # Defined in .env
       - MARIADB_PASSWORD=${db_user_password} 
+      - TZ=${timezone}
     networks:
       - piwigo-network
     volumes:
