@@ -4,7 +4,7 @@ networks:
 
 services:
   piwigo-main:
-    image: ghcr.io/piwigo/piwigo:latest
+    image: piwigo/piwigo:latest
     restart: always
     environment:
       - TZ=${timezone}
