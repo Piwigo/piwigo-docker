@@ -1,4 +1,4 @@
-# Piwigo docker (Beta) :
+# Piwigo docker
 
 An alpine based container to easily deploy piwigo !
 
@@ -7,7 +7,6 @@ An alpine based container to easily deploy piwigo !
 ### Starting the container
 
 Create a folder named `Piwigo` and copy `compose.yaml` from this repository, then create a `.env` file
-
 
 ```
 Piwigo
