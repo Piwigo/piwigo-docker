@@ -3,6 +3,7 @@ FROM docker.io/alpine:latest
 # Set Piwigo and PHP Version
 ARG PHP_VERSION="84"
 ARG PIWIGO_VERSION="16.2.0"
+ARG BUILD_VERSION=${PIWIGO_VERSION}a
 
 # Install dependencies
 RUN apk add --update --no-cache \
@@ -45,6 +46,9 @@ USER nginx
 RUN curl -o /tmp/piwigo.zip https://piwigo.org/download/dlcounter.php?code=${PIWIGO_VERSION}
 RUN unzip /tmp/piwigo.zip -d /var/www/source/
 RUN rm -rf /tmp/piwigo.zip
+
+# Add Tagging file
+RUN printf "Official Piwigo container\nPiwigo ${PIWIGO_VERSION}\nPHP ${PHP_VERSION}\nBuild Version ${BUILD_VERSION}" > /var/www/html/piwigo-docker.info
 
 # Configure s6-overlay
 USER root
