@@ -1,2 +1,2 @@
 #!/bin/execlineb -P
-php-fpm${PHP_VERSION} -F -R
+php-fpm{PHP_VERSION} -F -R

@@ -7,7 +7,7 @@ PHPV="${PHP_VERSION}"
 
 ## Set Timezone
 # check the timezone in /usr/share/zoneinfo and fallback to UTC if it doesn't exist
-if [ ! -e "/usr/share/zoneinfo/${TZVAL}" ]; then 
+if [ ! -f "/usr/share/zoneinfo/${TZVAL}" ]; then 
   echo "[timezone] '${TZVAL}' not found, fallback UTC" >&2
   TZVAL="UTC"
 fi

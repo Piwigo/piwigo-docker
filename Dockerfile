@@ -54,5 +54,5 @@ RUN printf "Official Piwigo container\nPiwigo ${PIWIGO_VERSION}\nPHP ${PHP_VERSI
 USER root
 COPY --chmod=0755 ./config/s6-rc.d/ /etc/s6-overlay/s6-rc.d/
 COPY --chmod=0755 ./config/init-script.sh /init-script.sh
-RUN sed -i 's/${PHP_VERSION}/84/' /etc/s6-overlay/s6-rc.d/php-fpm/run
+RUN sed -i "s/{PHP_VERSION}/${PHP_VERSION}/" /etc/s6-overlay/s6-rc.d/php-fpm/run
 ENTRYPOINT ["/init"]
