@@ -52,8 +52,7 @@ RUN printf "Official Piwigo container\nPiwigo ${PIWIGO_VERSION}\nPHP ${PHP_VERSI
 
 # Configure s6-overlay
 USER root
-COPY --chmod=0755 ./config/s6/services/php-fpm/run /etc/services.d/php-fpm/run
-COPY --chmod=0755 ./config/s6/services/nginx/run /etc/services.d/nginx/run
-COPY --chmod=0755 ./config/s6/cont-init.d/00-timezone /etc/cont-init.d/00-timezone
-COPY --chmod=0755 ./config/s6/cont-init.d/10-piwigo-setup /etc/cont-init.d/10-piwigo-setup
+COPY --chmod=0755 ./config/s6-rc.d/ /etc/s6-overlay/s6-rc.d/
+COPY --chmod=0755 ./config/init-script.sh /init-script.sh
+RUN sed -i "s/{PHP_VERSION}/${PHP_VERSION}/" /etc/s6-overlay/s6-rc.d/php-fpm/run
 ENTRYPOINT ["/init"]
