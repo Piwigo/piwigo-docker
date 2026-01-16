@@ -1,0 +1,12 @@
+# Piwigo database container
+[Container]
+Environment=MARIADB_RANDOM_ROOT_PASSWORD=true MARIADB_USER=piwigodb_user MARIADB_DATABASE=piwigodb MARIADB_PASSWORD=PASSWORD
+Image=docker.io/library/mariadb:lts
+Network=piwigo.network
+Volume=./piwigo-data/mysql:/var/lib/mysql:z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

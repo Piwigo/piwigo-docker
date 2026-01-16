@@ -2,6 +2,8 @@
 
 An alpine based container to easily deploy piwigo !
 
+Check the [podman README](./podman-quadlet/README.md) if you would rather use podman.
+
 ## Usage
 
 ### Starting the container
