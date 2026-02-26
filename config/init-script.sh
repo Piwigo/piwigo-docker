@@ -32,9 +32,9 @@ if [ -f '/var/www/html/piwigo/include/constants.php' ]; then
     VERSION_COMPARE=$(php$PHPV -r "echo version_compare('$SOURCE_VERSION','$VOLUME_VERSION');")
     case $VERSION_COMPARE in
         -1) echo "Please update your container to the latest version by running docker compose pull";;
-        0)  echo "Updating to piwigo version $SOURCE_VERSION"
+        0)  echo "Current piwigo version $VOLUME_VERSION";;
+        1)  echo "Updating to piwigo version $SOURCE_VERSION"
             /bin/cp -arT /var/www/source/piwigo /var/www/html/piwigo/;;
-        1) echo "Current piwigo version $VOLUME_VERSION";;
     esac
 else
     echo "Installing piwigo $SOURCE_VERSION"
