@@ -1,33 +1,43 @@
+volumes:
+  piwigo:
+  piwigo-scripts:
+  db:
+
 networks:
-  piwigo-network:
-    external: false
+  piwigo:
+  REVERSE_PROXY:
+    external: true
 
 services:
-  piwigo-main:
-    image: piwigo/piwigo:latest
+  piwigo:
+    image: piwigo/piwigo:${PIWIGO_VERSION:-latest}
+    hostname: piwigo
+    container_name: piwigo.db
     restart: always
     environment:
-      - TZ=${timezone}
+      - TZ=${TZ:-Europe/Amsterdam}
     networks:
-      - piwigo-network
+      - piwigo
     ports:
-      - ${piwigo_port}:80
+      - ${PIWIGO_PORT}:80
     depends_on:
-      - piwigo-db
+      - piwigo.db
     volumes:
-      - ./piwigo-data/piwigo:/var/www/html/piwigo/
-      - ./piwigo-data/scripts:/usr/local/bin/scripts/
-  piwigo-db:
-    image: docker.io/library/mariadb:lts
+      - piwigo:/var/www/html/piwigo/
+      - piwigo-scripts:/usr/local/bin/scripts/
+
+  piwigo.db:
+    image: docker.io/library/mariadb:${MARIADB_VERSION:-lts}
+    hostname: db
+    container_name: piwigo.db
     restart: always
     environment:
-      - MARIADB_RANDOM_ROOT_PASSWORD=true
-      - MARIADB_USER=piwigodb_user
-      - MARIADB_DATABASE=piwigodb
-      # Defined in .env
-      - MARIADB_PASSWORD=${db_user_password} 
-      - TZ=${timezone}
+      - MARIADB_RANDOM_ROOT_PASSWORD=${MARIADB_RANDOM_ROOT_PASSWORD:-true}
+      - MARIADB_USER=${MARIADB_USER:-piwigodb_user}
+      - MARIADB_DATABASE=${MARIADB_DATABASE:-piwigodb}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD} 
+      - TZ=${TZ:-Europe/Amsterdam}
     networks:
-      - piwigo-network
+      - piwigo
     volumes:
-      - ./piwigo-data/mysql:/var/lib/mysql
+      - db:/var/lib/mysql
