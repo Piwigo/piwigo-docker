@@ -24,7 +24,7 @@ RUN apk add --update --no-cache \
 	php${PHP_VERSION}-xml php${PHP_VERSION}-xmlreader php${PHP_VERSION}-xmlwriter \
 	php${PHP_VERSION}-xsl php${PHP_VERSION}-zip \
 	# External dependencies
-	curl exiftool ffmpeg mediainfo ghostscript findutils tzdata \
+	curl exiftool ffmpeg mediainfo ghostscript findutils tzdata postfix \
 	# Imagemagick
 	imagemagick imagemagick-heic imagemagick-jpeg imagemagick-jxl imagemagick-pango \
 	imagemagick-pdf imagemagick-raw imagemagick-svg imagemagick-tiff imagemagick-webp
@@ -39,7 +39,10 @@ ENV PHP_VERSION=${PHP_VERSION}
 COPY ./config/nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /var/www/html/piwigo /var/www/source/
 RUN chown nginx:nginx /var/www/html/ /var/www/source/
-EXPOSE 80 
+EXPOSE 80
+
+# Configure postfix to only send mail locally
+RUN postconf -e "myhostname = piwigo.local" && postconf -e "inet_interfaces = loopback-only"
 
 # Fetch, extract and install Piwigo
 USER nginx
