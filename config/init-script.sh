@@ -20,10 +20,6 @@ echo "date.timezone=${TZVAL}" > "/etc/php${PHPV}/conf.d/99-timezone.ini"
 
 echo "[timezone] set to '${TZVAL}'" >&2
 
-
-## Ensure directories are writable (see https://github.com/MariaDB/mariadb-docker/blob/master/docker-entrypoint.sh)
-find "/var/www/html/piwigo/" \! -user nginx \( -exec chown nginx: '{}' + -o -true \)
-
 SOURCE_VERSION=$(php$PHPV -r "include '/var/www/source/piwigo/include/constants.php'; echo PHPWG_VERSION;" 2> /dev/null)
 if [ -f '/var/www/html/piwigo/include/constants.php' ]; then
     # Check if the version of piwigo in the volume folder is different from the source
@@ -40,6 +36,10 @@ else
     echo "Installing piwigo $SOURCE_VERSION"
     /bin/cp -arT /var/www/source/piwigo /var/www/html/piwigo/
 fi
+
+## Ensure directories are readable and writable by nginx and the user with ACLs intenally and Unix ownership externally 
+setfacl -R -m u:nginx:rwx /var/www/html/piwigo
+find "/var/www/html/piwigo/" \( ! -user $PIWIGO_UID -o ! -group $PIWIGO_GID \) -exec chown $PIWIGO_UID:$PIWIGO_GID '{}' \;
 
 ## Load user scripts if it exist
 if [ -e "/usr/local/bin/scripts/user.sh" ]; then

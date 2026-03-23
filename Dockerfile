@@ -24,7 +24,7 @@ RUN apk add --update --no-cache \
 	php${PHP_VERSION}-xml php${PHP_VERSION}-xmlreader php${PHP_VERSION}-xmlwriter \
 	php${PHP_VERSION}-xsl php${PHP_VERSION}-zip \
 	# External dependencies
-	curl exiftool ffmpeg mediainfo ghostscript findutils tzdata postfix \
+	acl curl exiftool ffmpeg mediainfo ghostscript findutils tzdata postfix \
 	# Imagemagick
 	imagemagick imagemagick-heic imagemagick-jpeg imagemagick-jxl imagemagick-pango \
 	imagemagick-pdf imagemagick-raw imagemagick-svg imagemagick-tiff imagemagick-webp
