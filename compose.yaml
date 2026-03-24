@@ -8,6 +8,8 @@ services:
     restart: always
     environment:
       - TZ=${timezone}
+      - PIWIGO_UID=${PIWIGO_UID}
+      - PIWIGO_GID=${PIWIGO_GID}
     networks:
       - piwigo-network
     ports:
