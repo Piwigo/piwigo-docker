@@ -4,6 +4,8 @@ set -eu
 
 TZVAL="${TZ}"
 PHPV="${PHP_VERSION}"
+PIWIGO_USER_ID="${PIWIGO_UID:-1000}"
+PIWIGO_GROUP_ID="${PIWIGO_GID:-1000}"
 
 ## Set Timezone
 # check the timezone in /usr/share/zoneinfo and fallback to UTC if it doesn't exist
@@ -39,7 +41,7 @@ fi
 
 ## Ensure directories are readable and writable by nginx and the user with ACLs intenally and Unix ownership externally 
 setfacl -R -m u:nginx:rwx /var/www/html/piwigo
-find "/var/www/html/piwigo/" \( ! -user $PIWIGO_UID -o ! -group $PIWIGO_GID \) -exec chown $PIWIGO_UID:$PIWIGO_GID '{}' \;
+find "/var/www/html/piwigo/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
 
 ## Load user scripts if it exist
 if [ -e "/usr/local/bin/scripts/user.sh" ]; then
