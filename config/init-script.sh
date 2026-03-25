@@ -39,8 +39,12 @@ else
     /bin/cp -arT /var/www/source/piwigo /var/www/html/piwigo/
 fi
 
-## Ensure directories are readable and writable by nginx and the user with ACLs intenally and Unix ownership externally 
-setfacl -R -m u:nginx:rwx /var/www/html/piwigo
+## Ensure directories are readable and writable by nginx and the user with ACLs intenally and Unix ownership externally
+if setfacl -m u:nginx:rwx /var/www/html/piwigo ; then
+    setfacl -R -m u:nginx:rwx /var/www/html/piwigo
+else
+    chmod o+rwx /var/www/html/piwigo 
+fi
 find "/var/www/html/piwigo/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
 
 ## Load user scripts if it exist
