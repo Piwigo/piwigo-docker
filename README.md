@@ -15,7 +15,7 @@ If you want to have write permision in your piwigo folder see this page of the w
 If you prefer using a `mysql` container instead of `mariadb` edit `compose.yaml` and replace mariadb by mysql (be aware it is case sensitive).
 
 If you want to use an existing MySQL/MariaDB database you already setup, use `compose-nodb.yaml` and rename it `compose.yaml`.
-You can either create `.env` with `piwigo_port=` or manually edit the compose file to change the exposed port.
+You can either create `.env` without `piwigo_port=`.
 
 Create a script at `./piwigo-data/scripts/user.sh` to run commands before nginx and php start.  
 eg: to install extra dependencies like pandoc `apk add --no-cache pandoc`, available packages are listed at [alpine pkg index](https://pkgs.alpinelinux.org/packages).  

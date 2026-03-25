@@ -43,6 +43,7 @@ fi
 if setfacl -m u:nginx:rwx /var/www/html/piwigo ; then
     setfacl -R -m u:nginx:rwx /var/www/html/piwigo
 else
+    echo "Non bind-mount falling back to chmod o+rwx"
     chmod o+rwx /var/www/html/piwigo 
 fi
 find "/var/www/html/piwigo/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
