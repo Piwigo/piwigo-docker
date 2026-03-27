@@ -6,6 +6,16 @@ An alpine based container to easily deploy piwigo !
 
 You can follow the [install guide](https://piwigo.org/guides/install/docker) and the [update guide](https://piwigo.org/guides/update/docker) to get your container setup and up to date. 
 
+Sample `.env` file :
+
+```
+piwigo_port=8080
+db_user_password=<DatabasePassword>
+timezone=<Timezone>
+PIWIGO_UID=1000
+PIWIGO_GID=1000
+```
+
 Users comming from LinuxServer can follow this guide : https://github.com/Piwigo/piwigo-docker/wiki/Migration-Guide-from-the-LinuxServer
 
 If you want to have write permision in your piwigo folder see this page of the wiki : https://github.com/Piwigo/piwigo-docker/wiki/Copying-files-directly-to-piwigo-docker
