@@ -40,10 +40,11 @@ else
 fi
 
 ## Ensure directories are readable and writable by nginx and the user with ACLs intenally and Unix ownership externally
+## Default to chmod o+rwx in non bind-mount scenario
 if setfacl -m u:nginx:rwx /var/www/html/piwigo ; then
     setfacl -R -m u:nginx:rwx /var/www/html/piwigo
 else
-    echo "Non bind-mount falling back to chmod o+rwx"
+    echo "Non-bind-mount environment falling back to chmod o+rwx (expected on macOS and Windows, you can safely ignore setfacls warnings)"
     chmod o+rwx /var/www/html/piwigo 
 fi
 find "/var/www/html/piwigo/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
