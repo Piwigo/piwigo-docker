@@ -1,14 +1,19 @@
-networks:
-  piwigo-network:
-    external: false
+# This compose file doesn't include a database !
 
 services:
-  piwigo-backend:
+  piwigo-main:
     image: piwigo/piwigo:latest
+    restart: always
+    environment:
+      - TZ=${timezone}
+      - PIWIGO_UID=${PIWIGO_UID}
+      - PIWIGO_GID=${PIWIGO_GID}
     networks:
       - piwigo-network
     ports:
-      - '${piwigo_port}:80'
+      - ${piwigo_port}:80
+    depends_on:
+      - piwigo-db
     volumes:
       - ./piwigo-data/piwigo:/var/www/html/piwigo/
       - ./piwigo-data/scripts:/usr/local/bin/scripts/

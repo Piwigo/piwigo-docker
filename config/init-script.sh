@@ -48,6 +48,8 @@ else
     chmod o+rwx /var/www/html/piwigo 
 fi
 find "/var/www/html/piwigo/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
+find "/usr/local/bin/scripts/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
+
 
 ## Load user scripts if it exist
 if [ -e "/usr/local/bin/scripts/user.sh" ]; then
