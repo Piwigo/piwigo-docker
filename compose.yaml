@@ -15,7 +15,8 @@ services:
     ports:
       - ${piwigo_port}:80
     depends_on:
-      - piwigo-db
+      piwigo-db:
+        condition: service_healthy
     volumes:
       - ./piwigo-data/piwigo:/var/www/html/piwigo/
       - ./piwigo-data/scripts:/usr/local/bin/scripts/
@@ -29,6 +30,12 @@ services:
       # Defined in .env
       - MARIADB_PASSWORD=${db_user_password} 
       - TZ=${timezone}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - piwigo-network
     volumes:
