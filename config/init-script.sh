@@ -47,16 +47,16 @@ else
     echo "Non-bind-mount environment falling back to chmod o+rwx (expected on macOS and Windows, you can safely ignore setfacls warnings)"
     chmod o+rwx /var/www/html/piwigo 
 fi
-find "/var/www/html/piwigo/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
-find "/usr/local/bin/scripts/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
 
+# Set ownership
+find "/var/www/html/piwigo/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
+if [ -d "/usr/local/bin/scripts/" ]; then # Prevent faillure if user remove script mountpoint
+    find "/usr/local/bin/scripts/" \( ! -user $PIWIGO_USER_ID -o ! -group $PIWIGO_GROUP_ID \) -exec chown $PIWIGO_USER_ID:$PIWIGO_GROUP_ID '{}' \;
+fi
 
 ## Load user scripts if it exist
 if [ -e "/usr/local/bin/scripts/user.sh" ]; then
     echo "Loading user script"
     chmod +x "/usr/local/bin/scripts/user.sh"
     /bin/ash -c "/usr/local/bin/scripts/user.sh"
-else
-    echo "No user script found; you can optionally add one in ./piwigo-data/scripts/user.sh"
-    echo "See documentation : https://github.com/Piwigo/piwigo-docker?tab=readme-ov-file#advanced-options"
 fi
