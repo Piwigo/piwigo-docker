@@ -8,8 +8,6 @@ services:
       - TZ=${timezone}
       - PIWIGO_UID=${PIWIGO_UID}
       - PIWIGO_GID=${PIWIGO_GID}
-    networks:
-      - piwigo-network
     ports:
       - ${piwigo_port}:80
     depends_on:
