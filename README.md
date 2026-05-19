@@ -18,7 +18,9 @@ PIWIGO_GID=1000
 
 Users comming from LinuxServer can follow this guide : https://github.com/Piwigo/piwigo-docker/wiki/Migration-Guide-from-the-LinuxServer
 
-If you want to have write permision in your piwigo folder see this page of the wiki : https://github.com/Piwigo/piwigo-docker/wiki/Copying-files-directly-to-piwigo-docker
+⚠️ Don't forget that docker will bypass any firewall rules ⚠️
+
+You can allow only `localhost` or a specific ip by prepending it to `piwigo_port` (eg: `piwigo_port=127.0.0.1:8080`) 
 
 ## Advanced options
 
