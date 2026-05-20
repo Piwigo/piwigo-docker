@@ -2,6 +2,8 @@
 
 An alpine based container to easily deploy piwigo !
 
+Check the [podman README](./podman-quadlet/README.md) if you would rather use podman.
+
 ## Usage
 
 You can follow the [install guide](https://piwigo.org/guides/install/docker) and the [update guide](https://piwigo.org/guides/update/docker) to get your container setup and up to date. 
