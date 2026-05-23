@@ -10,6 +10,12 @@ services:
       - TZ=${timezone}
       - PIWIGO_UID=${PIWIGO_UID}
       - PIWIGO_GID=${PIWIGO_GID}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80/index.php || exit 1"]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - piwigo-network
     ports:
@@ -31,7 +37,7 @@ services:
       - MARIADB_PASSWORD=${db_user_password} 
       - TZ=${timezone}
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD-SHELL", "healthcheck.sh --connect --innodb_initialized"]
       start_period: 10s
       interval: 10s
       timeout: 5s
