@@ -3,7 +3,10 @@
 set -eu
 
 TZVAL="${TZ}"
-PHPV="${PHP_VERSION}"
+# Alpine packages ship e.g php84, the official php image ships php
+PHP_BIN="php${PHP_VERSION}"
+command -v "$PHP_BIN" > /dev/null 2>&1 || PHP_BIN="php"
+PHP_CONF_DIR=$("$PHP_BIN" -r 'echo PHP_CONFIG_FILE_SCAN_DIR;')
 PIWIGO_USER_ID="${PIWIGO_UID:-1000}"
 PIWIGO_GROUP_ID="${PIWIGO_GID:-1000}"
 
@@ -18,16 +21,16 @@ fi
 ln -snf "/usr/share/zoneinfo/$TZVAL" /etc/localtime
 echo "$TZVAL" > /etc/timezone
 # for php-fpm
-echo "date.timezone=${TZVAL}" > "/etc/php${PHPV}/conf.d/99-timezone.ini"
+echo "date.timezone=${TZVAL}" > "${PHP_CONF_DIR}/99-timezone.ini"
 
 echo "[timezone] set to '${TZVAL}'" >&2
 
-SOURCE_VERSION=$(php$PHPV -r "include '/var/www/source/piwigo/include/constants.php'; echo PHPWG_VERSION;" 2> /dev/null)
+SOURCE_VERSION=$($PHP_BIN -r "include '/var/www/source/piwigo/include/constants.php'; echo PHPWG_VERSION;" 2> /dev/null)
 if [ -f '/var/www/html/piwigo/include/constants.php' ]; then
     # Check if the version of piwigo in the volume folder is different from the source
-    VOLUME_VERSION=$(php$PHPV -r "include '/var/www/html/piwigo/include/constants.php'; echo PHPWG_VERSION;" 2> /dev/null)
+    VOLUME_VERSION=$($PHP_BIN -r "include '/var/www/html/piwigo/include/constants.php'; echo PHPWG_VERSION;" 2> /dev/null)
     # Compare version number using php https://www.php.net/manual/en/function.version-compare.php
-    VERSION_COMPARE=$(php$PHPV -r "echo version_compare('$SOURCE_VERSION','$VOLUME_VERSION');")
+    VERSION_COMPARE=$($PHP_BIN -r "echo version_compare('$SOURCE_VERSION','$VOLUME_VERSION');")
     case $VERSION_COMPARE in
         -1) echo "Please update your container to the latest version by running docker compose pull";;
         0)  echo "Current piwigo version $VOLUME_VERSION";;

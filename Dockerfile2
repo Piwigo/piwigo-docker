@@ -1,0 +1,56 @@
+ARG PHP_TAG="8.4-fpm-alpine"
+FROM docker.io/library/php:${PHP_TAG}
+
+# Set Piwigo Version
+ARG PIWIGO_VERSION="16.4.0"
+ARG BUILD_VERSION=${PIWIGO_VERSION}c
+
+# Install PHP extensions not built in the official image
+# Built in: ctype curl dom fileinfo ftp iconv mbstring mysqlnd openssl pdo phar posix session simplexml sodium tokenizer xml xmlreader xmlwriter
+COPY --from=docker.io/mlocati/php-extension-installer:2 /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions \
+	bcmath calendar exif ffi gd gettext imap intl mysqli opcache pcntl pdo_mysql \
+	shmop sockets sysvmsg sysvsem sysvshm xsl zip
+
+# Install dependencies
+RUN apk upgrade --update --no-cache \
+	&& apk add --no-cache \
+	# s6-overlay and Nginx
+	s6-overlay nginx \
+	# Extra dependencies
+	acl curl exiftool findutils icu-data-full postfix tzdata  \
+	# Imagemagick and media editing tools
+	ffmpeg mediainfo ghostscript libheif-plugins-all \
+	imagemagick imagemagick-heic imagemagick-jpeg imagemagick-jxl imagemagick-pango \
+	imagemagick-pdf imagemagick-raw imagemagick-svg imagemagick-tiff imagemagick-webp
+
+# Configure PHP and PHP-FPM
+# The official image ships no php.ini, use the production defaults
+RUN cp "${PHP_INI_DIR}/php.ini-production" "${PHP_INI_DIR}/php.ini"
+COPY ./config/php.ini ${PHP_INI_DIR}/conf.d/piwigo.ini
+# Run the pool as nginx instead of www-data
+COPY ./config/php-fpm.conf /usr/local/etc/php-fpm.d/zz-piwigo.conf
+COPY ./config/nginx.conf /etc/nginx/nginx.conf
+RUN mkdir -p /var/www/html/piwigo /var/www/source/
+RUN chown nginx:nginx /var/www/html/ /var/www/source/
+EXPOSE 80
+
+# Configure postfix to only send mail locally
+RUN postconf -e "myhostname = piwigo.local" && postconf -e "inet_interfaces = loopback-only"
+
+# Fetch, extract and install Piwigo
+USER nginx
+RUN curl -o /tmp/piwigo.zip https://piwigo.org/download/dlcounter.php?code=${PIWIGO_VERSION}
+RUN unzip /tmp/piwigo.zip -d /var/www/source/
+RUN rm -rf /tmp/piwigo.zip
+
+# Add Tagging file (PHP_VERSION is set by the base image, e.g. 8.4.27)
+RUN printf "Official Piwigo container\nPiwigo ${PIWIGO_VERSION}\nPHP ${PHP_VERSION}\nBuild Version ${BUILD_VERSION}" > /var/www/html/piwigo-docker.info
+
+# Configure s6-overlay
+USER root
+COPY --chmod=0755 ./config/s6-rc.d/ /etc/s6-overlay/s6-rc.d/
+COPY --chmod=0755 ./config/init-script.sh /init-script.sh
+# The official image binary is php-fpm, not php-fpm84
+RUN sed -i "s/{PHP_VERSION}//" /etc/s6-overlay/s6-rc.d/php-fpm/run
+ENTRYPOINT ["/init"]
