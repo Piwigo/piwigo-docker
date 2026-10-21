@@ -3,7 +3,7 @@ FROM docker.io/alpine:latest
 # Set Piwigo and PHP Version
 ARG PHP_VERSION="84"
 ARG PIWIGO_VERSION="16.4.0"
-ARG BUILD_VERSION=${PIWIGO_VERSION}c
+ARG BUILD_VERSION=${PIWIGO_VERSION}d
 
 # Install dependencies
 RUN apk add --update --no-cache \
